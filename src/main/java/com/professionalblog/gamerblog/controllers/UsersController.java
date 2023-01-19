@@ -43,8 +43,8 @@ public class UsersController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Users> updateUser(@PathVariable Long id, @RequestBody Users obj) {
-        obj = service.updateUser(id, obj);
-        return ResponseEntity.ok().body(obj);
+            obj = service.updateUser(id, obj);
+            return ResponseEntity.ok().body(obj);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
@@ -52,7 +52,7 @@ public class UsersController {
         if (!userOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
-        service.deleteUser(userOptional.get());
+        service.deleteUser(userOptional.get().getId());
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully.");
     }
 

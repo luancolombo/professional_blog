@@ -31,9 +31,6 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
         Optional<Post> postOptional = service.findById(id);
-        if (!postOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
-        }
         return ResponseEntity.status(HttpStatus.OK).body(postOptional.get());
     }
     @PostMapping
@@ -61,7 +58,7 @@ public class PostController {
         if (!postOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
         }
-        service.deletePost(postOptional.get());
+        service.deletePost(postOptional.get().getId());
         return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully.");
     }
 }
