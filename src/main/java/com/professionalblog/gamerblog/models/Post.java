@@ -36,7 +36,6 @@ public class Post implements Serializable {
         this.date = date;
         this.text = text;
     }
-
     public Long getId() {
         return id;
     }
