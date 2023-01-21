@@ -1,14 +1,15 @@
 package com.professionalblog.gamerblog.controllers;
 
+import com.professionalblog.gamerblog.dtos.PostDto;
 import com.professionalblog.gamerblog.models.Post;
 import com.professionalblog.gamerblog.services.PostService;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -34,22 +35,22 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postOptional.get());
     }
     @PostMapping
-    public ResponseEntity<Post> newPost(@RequestBody Post obj) {
-        obj.setDate(LocalDate.now(ZoneId.of("UTC")));
-        obj = service.savePost(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<Object> newPost(@RequestBody @Valid PostDto postDto) {
+        var postModel = new Post();
+        BeanUtils.copyProperties(postDto, postModel);
+        postModel.setDate(LocalDateTime.now(ZoneId.of("UTC")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.savePost(postModel));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable(value = "id") Long id, @RequestBody Post obj){
+    public ResponseEntity<Object> updatePost(@PathVariable(value = "id") Long id, @RequestBody @Valid PostDto postDto){
         Optional<Post> postOptional = service.findById(id);
         if (!postOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
         }
         var post = postOptional.get();
-        post.setAuthor(obj.getAuthor());
-        post.setTitle(obj.getTitle());
-        post.setText(obj.getText());
+        post.setAuthor(postDto.getAuthor());
+        post.setTitle(postDto.getTitle());
+        post.setText(postDto.getText());
         return ResponseEntity.status(HttpStatus.OK).body(service.savePost(post));
     }
     @DeleteMapping("/{id}")

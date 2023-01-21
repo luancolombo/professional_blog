@@ -1,12 +1,10 @@
 package com.professionalblog.gamerblog.models;
 
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TB_POSTS")
@@ -20,8 +18,8 @@ public class Post implements Serializable {
     private String title;
     @Column(nullable = false, length = 30)
     private String author;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate date;
+    @Column(nullable = false)
+    private LocalDateTime date;
     @Column(nullable = false)
     @Lob
     private String text;
@@ -29,13 +27,14 @@ public class Post implements Serializable {
     public Post() {
     }
 
-    public Post(Long id, String title, String author, LocalDate date, String text) {
+    public Post(Long id, String title, String author, LocalDateTime date, String text) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.date = date;
         this.text = text;
     }
+
     public Long getId() {
         return id;
     }
@@ -51,16 +50,15 @@ public class Post implements Serializable {
     public String getAuthor() {
         return author;
     }
-
     public void setAuthor(String author) {
         this.author = author;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
