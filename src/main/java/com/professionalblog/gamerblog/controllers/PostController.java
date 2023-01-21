@@ -2,7 +2,9 @@ package com.professionalblog.gamerblog.controllers;
 
 import com.professionalblog.gamerblog.dtos.PostDto;
 import com.professionalblog.gamerblog.models.Post;
+import com.professionalblog.gamerblog.services.Exception.ResourceNotFoundException;
 import com.professionalblog.gamerblog.services.PostService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -31,8 +32,8 @@ public class PostController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
-        Optional<Post> postOptional = service.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(postOptional.get());
+        var postOptional = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(postOptional);
     }
     @PostMapping
     public ResponseEntity<Object> newPost(@RequestBody @Valid PostDto postDto) {
@@ -43,23 +44,20 @@ public class PostController {
     }
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable(value = "id") Long id, @RequestBody @Valid PostDto postDto){
-        Optional<Post> postOptional = service.findById(id);
-        if (!postOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
+        try {
+            var postOptional = service.findById(id);
+            postOptional.setAuthor(postDto.getAuthor());
+            postOptional.setTitle(postDto.getTitle());
+            postOptional.setText(postDto.getText());
+            return ResponseEntity.status(HttpStatus.OK).body(service.savePost(postOptional));
+        }catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
         }
-        var post = postOptional.get();
-        post.setAuthor(postDto.getAuthor());
-        post.setTitle(postDto.getTitle());
-        post.setText(postDto.getText());
-        return ResponseEntity.status(HttpStatus.OK).body(service.savePost(post));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable(value = "id") Long id) {
-        Optional<Post> postOptional = service.findById(id);
-        if (!postOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
-        }
-        service.deletePost(postOptional.get().getId());
+        var postOptional = service.findById(id);
+        service.deletePost(id);
         return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully.");
     }
 }

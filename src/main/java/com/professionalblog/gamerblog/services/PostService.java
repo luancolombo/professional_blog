@@ -27,8 +27,9 @@ public class PostService {
     public List<Post> findAll() {
         return repository.findAll();
     }
-    public Optional<Post> findById(Long id) {
-        return repository.findById(id);
+    public Post findById(Long id) {
+        Optional<Post> obj = repository.findById(id);
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
     @Transactional
     public void deletePost(Long id) {
