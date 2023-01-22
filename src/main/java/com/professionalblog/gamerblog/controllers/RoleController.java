@@ -10,7 +10,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/roles")
@@ -28,11 +27,8 @@ public class RoleController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
-        Optional<Role> roleOptional = Optional.ofNullable(service.findById(id));
-        if (!roleOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(roleOptional.get());
+        var role = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(role);
     }
     @PostMapping
     public ResponseEntity<Role> newRole(@RequestBody Role obj) {

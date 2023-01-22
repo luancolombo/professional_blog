@@ -9,7 +9,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -28,11 +27,8 @@ public class UsersController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
-        Optional<Users> userOptional = service.findById(id);
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(userOptional.get());
+        var users  = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
     @PostMapping
     public ResponseEntity<Users> newUser(@RequestBody Users obj) {
@@ -48,12 +44,8 @@ public class UsersController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
-        Optional<Users> userOptional = service.findById(id);
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-        service.deleteUser(userOptional.get().getId());
+        var user = service.findById(id);
+        service.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully.");
     }
-
 }

@@ -29,12 +29,9 @@ public class UserService {
     public List<Users> findAll() {
         return repository.findAll();
     }
-    public Optional<Users> findById(Long id) {
-        try {
-            return repository.findById(id);
-        } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
-        }
+    public Users findById(Long id) {
+        Optional<Users> users = repository.findById(id);
+        return users.orElseThrow(() -> new ResourceNotFoundException(id));
     }
     @Transactional
     public void deleteUser(Long id) {

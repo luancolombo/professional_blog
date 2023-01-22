@@ -1,12 +1,13 @@
 package com.professionalblog.gamerblog.services;
 
-import com.professionalblog.gamerblog.models.Post;
 import com.professionalblog.gamerblog.models.Role;
 import com.professionalblog.gamerblog.repositories.RoleRepository;
+import com.professionalblog.gamerblog.services.Exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RoleService {
@@ -25,7 +26,8 @@ public class RoleService {
         return repository.findAll();
     }
     public Role findById(Long id) {
-        return repository.findById(id).get();
+        Optional<Role> roles = repository.findById(id);
+        return roles.orElseThrow(() -> new ResourceNotFoundException(id));
     }
     @Transactional
     public void deleteRole(Role role) {

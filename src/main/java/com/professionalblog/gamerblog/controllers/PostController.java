@@ -32,31 +32,31 @@ public class PostController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
-        var postOptional = service.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(postOptional);
+        var post = service.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(post);
     }
     @PostMapping
     public ResponseEntity<Object> newPost(@RequestBody @Valid PostDto postDto) {
-        var postModel = new Post();
-        BeanUtils.copyProperties(postDto, postModel);
-        postModel.setDate(LocalDateTime.now(ZoneId.of("UTC")));
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.savePost(postModel));
+        var post = new Post();
+        BeanUtils.copyProperties(postDto, post);
+        post.setDate(LocalDateTime.now(ZoneId.of("UTC")));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.savePost(post));
     }
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable(value = "id") Long id, @RequestBody @Valid PostDto postDto){
         try {
-            var postOptional = service.findById(id);
-            postOptional.setAuthor(postDto.getAuthor());
-            postOptional.setTitle(postDto.getTitle());
-            postOptional.setText(postDto.getText());
-            return ResponseEntity.status(HttpStatus.OK).body(service.savePost(postOptional));
+            var post = service.findById(id);
+            post.setAuthor(postDto.getAuthor());
+            post.setTitle(postDto.getTitle());
+            post.setText(postDto.getText());
+            return ResponseEntity.status(HttpStatus.OK).body(service.savePost(post));
         }catch (EntityNotFoundException e) {
             throw new ResourceNotFoundException(id);
         }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable(value = "id") Long id) {
-        var postOptional = service.findById(id);
+        var post = service.findById(id);
         service.deletePost(id);
         return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully.");
     }
