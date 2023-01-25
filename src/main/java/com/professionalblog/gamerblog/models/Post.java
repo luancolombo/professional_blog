@@ -6,6 +6,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+
 @Entity
 @Table(name = "TB_POSTS")
 public class Post implements Serializable {
@@ -23,16 +24,19 @@ public class Post implements Serializable {
     @Column(nullable = false)
     @Lob
     private String text;
+    @ManyToOne
+    @JoinColumn(name = "users_id", nullable = false)
+    private Users user;
 
     public Post() {
     }
-
-    public Post(Long id, String title, String author, LocalDateTime date, String text) {
+    public Post(Long id, String title, String author, LocalDateTime date, String text, Users user) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.date = date;
         this.text = text;
+        this.user = user;
     }
 
     public Long getId() {
@@ -68,5 +72,13 @@ public class Post implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 }

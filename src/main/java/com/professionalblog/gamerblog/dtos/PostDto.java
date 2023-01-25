@@ -1,5 +1,6 @@
 package com.professionalblog.gamerblog.dtos;
 
+import com.professionalblog.gamerblog.models.Users;
 import jakarta.validation.constraints.NotBlank;
 
 public class PostDto {
@@ -9,6 +10,8 @@ public class PostDto {
     private String author;
     @NotBlank
     private String text;
+    @NotBlank
+    private Users user;
 
     public String getTitle() {
         return title;
@@ -32,5 +35,13 @@ public class PostDto {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Users getUser() {
+        return user;
+    }
+
+    public void setUser(Users user) {
+        this.user = user;
     }
 }

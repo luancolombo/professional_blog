@@ -24,7 +24,7 @@ public class UserService {
     }
     @Transactional
     public Users saveUser(Users user) {
-        return repository.save(user);
+            return repository.save(user);
     }
     public List<Users> findAll() {
         return repository.findAll();
@@ -54,10 +54,6 @@ public class UserService {
     }
     private void updateData(Users user, Users obj) {
         user.setName(obj.getName());
-        user.setLast_name(obj.getLast_name());
         user.setEmail(obj.getEmail());
-        user.setUsername(obj.getUsername());
-        user.setPassword(obj.getPassword());
-        user.setRoles(obj.getRoles());
     }
 }
