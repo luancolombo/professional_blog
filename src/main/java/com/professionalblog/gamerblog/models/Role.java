@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "TB_ROLE")
@@ -17,10 +18,11 @@ public class Role implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
     private RoleName roleName;
+    @ManyToMany(mappedBy = "roles")
+    private List<Users> users;
     public Role() {
     }
-    public Role(RoleName roleAdmin) {
-    }
+
     public Role(Long id, RoleName roleName) {
         this.id = id;
         this.roleName = roleName;

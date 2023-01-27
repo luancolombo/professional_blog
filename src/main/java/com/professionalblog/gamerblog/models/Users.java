@@ -61,6 +61,10 @@ public class Users implements Serializable {
         return roles;
     }
 
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     public List<Post> getPosts() {
         return posts;
     }

@@ -55,5 +55,6 @@ public class UserService {
     private void updateData(Users user, Users obj) {
         user.setName(obj.getName());
         user.setEmail(obj.getEmail());
+        user.setRoles(obj.getRoles());
     }
 }

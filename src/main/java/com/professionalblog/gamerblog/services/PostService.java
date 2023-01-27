@@ -41,5 +41,4 @@ public class PostService {
             throw new DatabaseException(e.getMessage());
         }
     }
-
 }

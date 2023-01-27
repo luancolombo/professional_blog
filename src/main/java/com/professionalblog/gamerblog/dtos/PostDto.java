@@ -10,7 +10,7 @@ public class PostDto {
     private String author;
     @NotBlank
     private String text;
-    @NotBlank
+
     private Users user;
 
     public String getTitle() {
@@ -40,7 +40,6 @@ public class PostDto {
     public Users getUser() {
         return user;
     }
-
     public void setUser(Users user) {
         this.user = user;
     }
