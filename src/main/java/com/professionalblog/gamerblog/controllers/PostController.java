@@ -5,6 +5,7 @@ import com.professionalblog.gamerblog.models.Post;
 import com.professionalblog.gamerblog.services.Exception.DatabaseException;
 import com.professionalblog.gamerblog.services.Exception.PostNotFoundException;
 import com.professionalblog.gamerblog.services.PostService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -27,7 +28,8 @@ public class PostController {
     public PostController(PostService service) {
         this.service = service;
     }
-
+    @CrossOrigin(origins = {"http://localhost:8080", "https://professionalblog-production.up.railway.app"})
+    @Operation(summary = "Find all Posts", description = "Find all Posts")
     @GetMapping
     public ResponseEntity<List<Post>> findAllPosts() {
         List<Post> list = service.findAll();
