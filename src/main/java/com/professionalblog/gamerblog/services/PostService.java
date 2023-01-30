@@ -2,11 +2,8 @@ package com.professionalblog.gamerblog.services;
 
 import com.professionalblog.gamerblog.models.Post;
 import com.professionalblog.gamerblog.repositories.PostRepository;
-import com.professionalblog.gamerblog.services.Exception.DatabaseException;
-import com.professionalblog.gamerblog.services.Exception.ResourceNotFoundException;
+import com.professionalblog.gamerblog.services.Exception.PostNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,16 +26,10 @@ public class PostService {
     }
     public Post findById(Long id) {
         Optional<Post> obj = repository.findById(id);
-        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+        return obj.orElseThrow(() -> new PostNotFoundException(id));
     }
     @Transactional
     public void deletePost(Long id) {
-        try {
             repository.deleteById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new DatabaseException(e.getMessage());
-        }
     }
 }

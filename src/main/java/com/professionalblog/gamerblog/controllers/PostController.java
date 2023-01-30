@@ -2,11 +2,14 @@ package com.professionalblog.gamerblog.controllers;
 
 import com.professionalblog.gamerblog.dtos.PostDto;
 import com.professionalblog.gamerblog.models.Post;
-import com.professionalblog.gamerblog.services.Exception.ResourceNotFoundException;
+import com.professionalblog.gamerblog.services.Exception.DatabaseException;
+import com.professionalblog.gamerblog.services.Exception.PostNotFoundException;
 import com.professionalblog.gamerblog.services.PostService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +46,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.savePost(post));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePost(@PathVariable(value = "id") Long id, @RequestBody @Valid PostDto postDto){
+    public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody @Valid PostDto postDto){
         try {
             var post = service.findById(id);
             post.setAuthor(postDto.getAuthor());
@@ -51,13 +54,19 @@ public class PostController {
             post.setText(postDto.getText());
             return ResponseEntity.status(HttpStatus.OK).body(service.savePost(post));
         }catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(id);
+            throw new PostNotFoundException(id);
         }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable(value = "id") Long id) {
-        var post = service.findById(id);
-        service.deletePost(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully.");
+        try {
+            var post = service.findById(id);
+            service.deletePost(id);
+            return ResponseEntity.status(HttpStatus.OK).body("Post deleted successfully.");
+        } catch (EmptyResultDataAccessException e) {
+            throw new PostNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 }

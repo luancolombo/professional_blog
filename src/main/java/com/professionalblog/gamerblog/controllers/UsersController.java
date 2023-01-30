@@ -1,13 +1,19 @@
 package com.professionalblog.gamerblog.controllers;
 
+import com.professionalblog.gamerblog.dtos.UsersDto;
 import com.professionalblog.gamerblog.models.Users;
+import com.professionalblog.gamerblog.services.Exception.DatabaseException;
+import com.professionalblog.gamerblog.services.Exception.UserNotFoundException;
 import com.professionalblog.gamerblog.services.UserService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -31,21 +37,34 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
     @PostMapping
-    public ResponseEntity<Users> newUser(@RequestBody Users obj) {
-        obj = service.saveUser(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<Object> newUser(@RequestBody @Valid UsersDto usersDto) {
+        var users = new Users();
+        BeanUtils.copyProperties(usersDto, users);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.saveUser(users));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable Long id, @RequestBody Users obj) {
-            obj = service.updateUser(id, obj);
-            return ResponseEntity.ok().body(obj);
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody @Valid UsersDto usersDto) {
+        try {
+            var users = service.findById(id);
+            users.setName(usersDto.getName());
+            users.setEmail(usersDto.getEmail());
+            users.setRoles(usersDto.getRoles());
+            return ResponseEntity.status(HttpStatus.OK).body(service.saveUser(users));
+        } catch (EntityNotFoundException e) {
+            throw new UserNotFoundException(id);
+        }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
-        var user = service.findById(id);
-        service.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully.");
+        try {
+            var user = service.findById(id);
+            service.deleteUser(id);
+            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully.");
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException(e.getMessage());
+        }
     }
 }
