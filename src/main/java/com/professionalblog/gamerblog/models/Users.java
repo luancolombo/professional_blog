@@ -2,15 +2,18 @@ package com.professionalblog.gamerblog.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
-import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 @Entity
 @Table(name = "TB_USER")
-public class Users implements Serializable {
-    @Serial
+public class Users implements UserDetails, Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +22,10 @@ public class Users implements Serializable {
     private String email;
     @Column(nullable = false, length = 20)
     private String name;
+    @Column(nullable = false, unique = true)
+    private String username;
+    @Column(nullable = false)
+    private String password;
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Post> posts;
@@ -31,10 +38,12 @@ public class Users implements Serializable {
     public Users() {
     }
 
-    public Users(Long id, String email, String name) {
+    public Users(Long id, String email, String name, String username, String password) {
         this.id = id;
         this.email = email;
         this.name = name;
+        this.username = username;
+        this.password = password;
     }
 
     public Long getId() {
@@ -57,6 +66,23 @@ public class Users implements Serializable {
         this.name = name;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.password = passwordEncoder.encode(password).toString();
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
@@ -67,5 +93,29 @@ public class Users implements Serializable {
 
     public List<Post> getPosts() {
         return posts;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles;
+    }
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

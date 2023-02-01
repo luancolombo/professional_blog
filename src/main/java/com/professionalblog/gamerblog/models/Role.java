@@ -2,15 +2,15 @@ package com.professionalblog.gamerblog.models;
 
 import com.professionalblog.gamerblog.enums.RoleName;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "TB_ROLE")
-public class Role implements Serializable {
-    @Serial
+public class Role implements GrantedAuthority, Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,5 +38,10 @@ public class Role implements Serializable {
     }
     public void setRoleName(RoleName roleName) {
         this.roleName = roleName;
+    }
+
+    @Override
+    public String getAuthority() {
+        return this.roleName.toString();
     }
 }

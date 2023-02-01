@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
     @Operation(summary = "Create new post", description = "Create new post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> newPost(@RequestBody @Valid PostDto postDto) {
         var post = new Post();
@@ -49,6 +51,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.savePost(post));
     }
     @Operation(summary = "Update post", description = "Update post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody @Valid PostDto postDto){
         try {
@@ -62,6 +65,7 @@ public class PostController {
         }
     }
     @Operation(summary = "Delete post", description = "Delete post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable(value = "id") Long id) {
         try {

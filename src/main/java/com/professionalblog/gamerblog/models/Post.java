@@ -2,7 +2,6 @@ package com.professionalblog.gamerblog.models;
 
 import jakarta.persistence.*;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "TB_POSTS")
 public class Post implements Serializable {
-    @Serial
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

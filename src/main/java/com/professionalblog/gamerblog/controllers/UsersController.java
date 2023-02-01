@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
     @Operation(summary = "Create new user", description = "Create new user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<Object> newUser(@RequestBody @Valid UsersDto usersDto) {
         var users = new Users();
@@ -46,6 +48,7 @@ public class UsersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveUser(users));
     }
     @Operation(summary = "Update user", description = "Update user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody @Valid UsersDto usersDto) {
         try {
@@ -53,12 +56,15 @@ public class UsersController {
             users.setName(usersDto.getName());
             users.setEmail(usersDto.getEmail());
             users.setRoles(usersDto.getRoles());
+            users.setUsername(usersDto.getUsername());
+            users.setPassword(usersDto.getPassword());
             return ResponseEntity.status(HttpStatus.OK).body(service.saveUser(users));
         } catch (EntityNotFoundException e) {
             throw new UserNotFoundException(id);
         }
     }
     @Operation(summary = "Delete user", description = "Delete user")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
         try {
