@@ -5,6 +5,7 @@ import com.professionalblog.gamerblog.models.Users;
 import com.professionalblog.gamerblog.services.Exception.DatabaseException;
 import com.professionalblog.gamerblog.services.Exception.UserNotFoundException;
 import com.professionalblog.gamerblog.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -15,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = {"http://localhost:8080", "https://professionalblog-production.up.railway.app"})
 @RestController
 @RequestMapping("/users")
 public class UsersController {
@@ -25,24 +26,26 @@ public class UsersController {
     public UsersController(UserService service) {
         this.service = service;
     }
-
+    @Operation(summary = "Find all users", description = "Find all users")
     @GetMapping
     public ResponseEntity<List<Users>> findAllUsers() {
         List<Users> list = service.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
+    @Operation(summary = "Find users by id", description = "Find users by id")
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
         var users  = service.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
+    @Operation(summary = "Create new user", description = "Create new user")
     @PostMapping
     public ResponseEntity<Object> newUser(@RequestBody @Valid UsersDto usersDto) {
         var users = new Users();
         BeanUtils.copyProperties(usersDto, users);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.saveUser(users));
     }
-
+    @Operation(summary = "Update user", description = "Update user")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody @Valid UsersDto usersDto) {
         try {
@@ -55,6 +58,7 @@ public class UsersController {
             throw new UserNotFoundException(id);
         }
     }
+    @Operation(summary = "Delete user", description = "Delete user")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id) {
         try {

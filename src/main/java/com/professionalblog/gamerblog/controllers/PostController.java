@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-@CrossOrigin
+@CrossOrigin(origins = {"http://localhost:8080", "https://professionalblog-production.up.railway.app"})
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -28,18 +28,19 @@ public class PostController {
     public PostController(PostService service) {
         this.service = service;
     }
-    @CrossOrigin(origins = {"http://localhost:8080", "https://professionalblog-production.up.railway.app"})
     @Operation(summary = "Find all Posts", description = "Find all Posts")
     @GetMapping
     public ResponseEntity<List<Post>> findAllPosts() {
         List<Post> list = service.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
+    @Operation(summary = "Find Posts by id", description = "Find Posts by id")
     @GetMapping("/{id}")
     public ResponseEntity<Object> findById(@PathVariable(value = "id") Long id){
         var post = service.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
+    @Operation(summary = "Create new post", description = "Create new post")
     @PostMapping
     public ResponseEntity<Object> newPost(@RequestBody @Valid PostDto postDto) {
         var post = new Post();
@@ -47,6 +48,7 @@ public class PostController {
         post.setDate(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.CREATED).body(service.savePost(post));
     }
+    @Operation(summary = "Update post", description = "Update post")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePost(@PathVariable Long id, @RequestBody @Valid PostDto postDto){
         try {
@@ -59,6 +61,7 @@ public class PostController {
             throw new PostNotFoundException(id);
         }
     }
+    @Operation(summary = "Delete post", description = "Delete post")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable(value = "id") Long id) {
         try {
