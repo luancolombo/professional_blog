@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-@CrossOrigin(origins = {"http://localhost:8080", "https://professionalblog-production.up.railway.app"})
+
 @RestController
 @RequestMapping("/posts")
 public class PostController {

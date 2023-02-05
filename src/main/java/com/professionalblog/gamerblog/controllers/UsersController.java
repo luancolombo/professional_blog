@@ -17,7 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-@CrossOrigin(origins = {"http://localhost:8080", "https://professionalblog-production.up.railway.app"})
+
 @RestController
 @RequestMapping("/users")
 public class UsersController {
