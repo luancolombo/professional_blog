@@ -65,7 +65,7 @@ public class Users implements UserDetails, Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
+    @Override
     public String getUsername() {
         return username;
     }
@@ -73,7 +73,7 @@ public class Users implements UserDetails, Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
-
+    @Override
     public String getPassword() {
         return password;
     }
