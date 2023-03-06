@@ -1,17 +1,16 @@
 package com.professionalblog.gamerblog.dtos;
 
-import com.professionalblog.gamerblog.models.Users;
 import jakarta.validation.constraints.NotBlank;
 
 public class PostDto {
     @NotBlank
     private String title;
     @NotBlank
+    private String urlImage;
+    @NotBlank
     private String author;
     @NotBlank
     private String text;
-
-    private Users user;
 
     public String getTitle() {
         return title;
@@ -19,6 +18,14 @@ public class PostDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
 
     public String getAuthor() {
@@ -35,12 +42,5 @@ public class PostDto {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-    public void setUser(Users user) {
-        this.user = user;
     }
 }

@@ -1,6 +1,5 @@
 package com.professionalblog.gamerblog.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,9 +25,6 @@ public class Users implements UserDetails, Serializable {
     private String username;
     @Column(nullable = false)
     private String password;
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Post> posts;
     @ManyToMany
     @JoinTable(name = "TB_USERS_ROLES",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -89,10 +85,6 @@ public class Users implements UserDetails, Serializable {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
     }
 
     @Override

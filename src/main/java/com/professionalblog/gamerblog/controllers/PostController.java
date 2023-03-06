@@ -58,6 +58,7 @@ public class PostController {
             var post = service.findById(id);
             post.setAuthor(postDto.getAuthor());
             post.setTitle(postDto.getTitle());
+            post.setUrlImage(postDto.getUrlImage());
             post.setText(postDto.getText());
             return ResponseEntity.status(HttpStatus.OK).body(service.savePost(post));
         }catch (EntityNotFoundException e) {

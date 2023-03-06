@@ -13,9 +13,9 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI () {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Professional Blog RESTful API")
+                        .title("Professional Blog REST API")
                         .version("1.0")
-                        .description("API Restful of a professional blog")
+                        .description("API REST of a professional blog")
                         .termsOfService("https://www.linkedin.com/in/luan-colombo89/")
                         .license(new License()
                                 .name("MIT License")

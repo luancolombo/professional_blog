@@ -16,6 +16,8 @@ public class Post implements Serializable {
     private Long id;
     @Column(nullable = false, length = 30)
     private String title;
+    @Column(nullable = false)
+    private String urlImage;
     @Column(nullable = false, length = 30)
     private String author;
     @Column(nullable = false)
@@ -23,19 +25,16 @@ public class Post implements Serializable {
     @Column(nullable = false)
     @Lob
     private String text;
-    @ManyToOne
-    @JoinColumn(name = "users_id")
-    private Users user;
 
     public Post() {
     }
-    public Post(Long id, String title, String author, LocalDateTime date, String text, Users user) {
+    public Post(Long id, String title, String urlImage, String author, LocalDateTime date, String text) {
         this.id = id;
         this.title = title;
+        this.urlImage = urlImage;
         this.author = author;
         this.date = date;
         this.text = text;
-        this.user = user;
     }
 
     public Long getId() {
@@ -50,6 +49,12 @@ public class Post implements Serializable {
         this.title = title;
     }
 
+    public String getUrlImage() {
+        return urlImage;
+    }
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
+    }
     public String getAuthor() {
         return author;
     }
@@ -71,13 +76,5 @@ public class Post implements Serializable {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public Users getUser() {
-        return user;
-    }
-
-    public void setUser(Users user) {
-        this.user = user;
     }
 }

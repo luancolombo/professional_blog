@@ -21,8 +21,8 @@ public class WebSecurity {
                 .httpBasic()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/posts", "/swagger-ui/*").permitAll()
-                .requestMatchers("users", "roles").authenticated()
+                .requestMatchers("/posts").permitAll()
+                .requestMatchers("/users", "/roles").authenticated()
                 .and()
                 .csrf().disable();
         return http.build();

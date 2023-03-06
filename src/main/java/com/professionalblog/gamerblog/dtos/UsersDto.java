@@ -1,6 +1,6 @@
 package com.professionalblog.gamerblog.dtos;
 
-import com.professionalblog.gamerblog.models.Post;
+
 import com.professionalblog.gamerblog.models.Role;
 import jakarta.validation.constraints.NotBlank;
 
@@ -15,7 +15,6 @@ public class UsersDto {
     private String username;
     @NotBlank
     private String password;
-    private List<Post> posts;
     List<Role> roles;
 
     public String getEmail() {
@@ -48,14 +47,6 @@ public class UsersDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
     }
 
     public List<Role> getRoles() {
